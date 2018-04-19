@@ -57,6 +57,7 @@ export default {
     screenfull:'全屏',
     theme:'换肤'
   },
+  id:'ID',
   url_text:'链接地址',
   sql_text:'SQL内容',
   page_title:'页面标题',
@@ -125,6 +126,7 @@ export default {
     type:'类型',
     remark:'点评',
     search:'搜索',
+    hidden:'隐藏',
     view:'查看',
     add:'添加',
     export:'导出',

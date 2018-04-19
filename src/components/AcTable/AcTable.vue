@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <el-table :data="config.data" v-loading.body="listLoading" element-loading-text="Loading" border fit
+              @sort-change="sortChange"
               highlight-current-row>
 
       <!--行操作链接-->
@@ -21,9 +22,8 @@
       <!--行操作链接-->
 
       <!--表格数据-->
-      <el-table-column v-for="(col,idx) in config.columns" :key="idx" :align="col.align"
-                       :label="$t(''+col.column)"
-                       :width="col.width">
+      <el-table-column v-for="(col,idx) in config.columns" :key="idx" :align="col.align" :label="$t(''+col.column)"
+                       sortable :prop="col.column" :width="col.width">
         <template slot-scope="scope">
           <span v-if="!col.template">
           {{scope.row[col.column]}}
@@ -87,7 +87,7 @@
         listLoading:true,
         dialogFormVisible:false,
         isConfirmDialog:false,
-        pageStatus:''//add,update,view,delete
+        pageStatus:'hidden'//add,update,view,delete
       }
     },
     created() {
@@ -98,7 +98,7 @@
         param:{
           page:1,
           limit:20,
-          sort:'+user_id'
+          sort:''
         },
         show_view_link:false,
         show_update_link:false,
@@ -172,9 +172,9 @@
               method:'post',
               params:this.config.temp
             }).then(response => {
-              console.log(response);
+              // console.log(response);
+              this.listLoading = false;
               if (response.success) {
-                this.listLoading = false;
                 this.dialogFormVisible = false;
                 this.search()
               } else {
@@ -186,6 +186,17 @@
               }
             })
           }
+        }
+      },
+      sortChange(event) {
+        if (event.column != null) {
+          const column = event.prop;
+          if (event.order === 'ascending') {
+            this.config.param.sort = column + ' asc';
+          } else {
+            this.config.param.sort = column + ' desc';
+          }
+          this.search()
         }
       }
     }
